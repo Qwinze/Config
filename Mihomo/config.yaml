@@ -57,7 +57,8 @@ tun:
   enable: true
   # system/gvisor/mixed
   stack: mixed
-  dns-hijack: ["any:53", "tcp://any:53"]
+  # 如果需要劫持DNS请取消以下注释
+  # dns-hijack: ["any:53", "tcp://any:53"]
   auto-route: true
   auto-redirect: true
   auto-detect-interface: true
@@ -66,7 +67,8 @@ tun:
 dns:
   enable: true
   cache-algorithm: arc
-  listen: 0.0.0.0:1053
+  # 如果需要劫持DNS，以下端口修改为1053
+  listen: 0.0.0.0:53
   ipv6: false
   respect-rules: true
   enhanced-mode: fake-ip
@@ -74,6 +76,8 @@ dns:
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - "rule-set:fakeipfilter_domain"
+    - "rule-set:apple_domain"
+    - "rule-set:cn_domain"
   default-nameserver:
     - 223.5.5.5
     - 223.6.6.6
@@ -112,7 +116,7 @@ proxy-groups:
 # 规则匹配
 # 此规则部分没有做防泄露处理，因为弊严重大于利！
 rules:
-  - IP-CIDR,10.0.0.14/32,直连
+  - IP-CIDR,10.0.0.14/32,直连,no-resolve
   - RULE-SET,private_domain,直连
   - RULE-SET,apple_domain,直连
   - RULE-SET,ai,🤖 AI
