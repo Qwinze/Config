@@ -90,13 +90,13 @@ dns:
     
 # 出站策略
 # 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
-pr: &pr {type: select, proxies: [🚀 默认代理, 🔯 代理故转, 🔯 AI故转, ♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动, 🇭🇰 香港节点, 🇹🇼 台湾节点, 🇸🇬 新加坡节点, 🇯🇵 日本节点, 🇭🇰 ISP节点, 🇺🇲 美国节点, 🌐 全部节点, 直连]}
+pr: &pr {type: select, proxies: [🚀 默认代理, 🔯 Proxy故转, 🔯 AI故转, ♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动, 🇭🇰 香港节点, 🇹🇼 台湾节点, 🇸🇬 新加坡节点, 🇯🇵 日本节点, 🇭🇰 ISP节点, 🇺🇲 美国节点, 🌐 全部节点, 直连]}
 proxy-groups:
-  - {name: 🚀 默认代理, type: select, proxies: [🔯 代理故转, 🔯 AI故转, ♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动, 🇭🇰 香港节点, 🇹🇼 台湾节点, 🇸🇬 新加坡节点, 🇯🇵 日本节点, 🇭🇰 ISP节点, 🇺🇲 美国节点, 🌐 全部节点, 直连]}
+  - {name: 🚀 默认代理, type: select, proxies: [🔯 Proxy故转, 🔯 AI故转, ♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动, 🇭🇰 香港节点, 🇹🇼 台湾节点, 🇸🇬 新加坡节点, 🇯🇵 日本节点, 🇭🇰 ISP节点, 🇺🇲 美国节点, 🌐 全部节点, 直连]}
   - {name: 🤖 AI, <<: *pr}
   - {name: 🎥 NETFLIX, <<: *pr}
   - {name: 🐟 漏网之鱼, <<: *pr}
-  - {name: 🔯 代理故转, type: fallback, interval: 300, proxies: [♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动]}
+  - {name: 🔯 Proxy故转, type: fallback, interval: 300, proxies: [♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动]}
   - {name: 🔯 AI故转, type: fallback, interval: 300, proxies: [♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 美国自动]}
   - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)^(?=.*(港|hk|hongkong|hong kong))(?!.*ISP).*$"}
   - {name: ♻️ 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)台|tw|taiwan|tai wan"}
