@@ -80,9 +80,8 @@ dns:
     - "rule-set:apple_domain"
     - "rule-set:microsoft_domain"
     - "rule-set:cn_domain"
-  # 若无部署DNS服务器，需要取消以下注释并填写阿里和腾讯的DNS，因为需要解析下面的DOH
-  default-nameserver:
-    - 10.0.0.14
+  # default-nameserver的作用类似Bootstrap DNS，用作解析下方的DOH
+  # default-nameserver:
   # 若无部署DNS服务器，以下请用阿里和腾讯的DOH 
   nameserver:
     - 10.0.0.14
