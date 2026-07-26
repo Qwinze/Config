@@ -2,7 +2,7 @@
 # 自用配置，需要部署DNS服务器，否则DNS模块需要根据注释修改
 # 机场订阅
 proxy-providers:
-  机场名称:
+  机场名字:
     url: "订阅链接"
     type: http
     interval: 86400
@@ -23,8 +23,7 @@ bind-address: "*"
 ipv6: true
 unified-delay: true
 tcp-concurrent: true
-log-level: warning
-global-client-fingerprint: chrome
+log-level: info
 keep-alive-idle: 600
 keep-alive-interval: 15
 profile:
@@ -35,10 +34,9 @@ profile:
 external-controller: 0.0.0.0:9090
 secret: ""
 external-ui: "/etc/mihomo/run/ui"
-external-ui-name: zashboard
 external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 
-# 嗅探（fakeip下其实可以不用嗅探）
+# 嗅探
 sniffer:
   enable: true
   sniff:
@@ -56,7 +54,6 @@ sniffer:
 # 入站  
 tun:
   enable: true
-  # system/gvisor/mixed
   stack: mixed
   # 如果需要劫持DNS请取消以下注释
   # dns-hijack: ["any:53", "tcp://any:53"]
@@ -71,21 +68,22 @@ dns:
   # 如果需要劫持DNS，以下端口修改为1053
   listen: 0.0.0.0:53
   ipv6: false
-  respect-rules: true
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
+  fake-ip-range: 198.18.0.0/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-    - "rule-set:fakeipfilter_domain"
+    - "*"
+    - "+.lan"
+    - "+.local"
+    - "+.market.xiaomi.com"
     - "rule-set:private_domain"
     - "rule-set:apple_domain"
     - "rule-set:microsoft_domain"
     - "rule-set:cn_domain"
   # 若无部署DNS服务器，需要取消以下注释并填写阿里和腾讯的DNS，因为需要解析下面的DOH
-  # default-nameserver:
-  # 若无部署DNS服务器，以下请用阿里和腾讯的DOH 
-  proxy-server-nameserver:
+  default-nameserver:
     - 10.0.0.14
+  # 若无部署DNS服务器，以下请用阿里和腾讯的DOH 
   nameserver:
     - 10.0.0.14
     
@@ -123,9 +121,10 @@ rules:
   - RULE-SET,microsoft_domain,直连
   - RULE-SET,ai_domain,🤖 AI
   - RULE-SET,netflix_domain,🎥 NETFLIX
+  - RULE-SET,apple_ip,直连
+  - RULE-SET,netflix_ip,🎥 NETFLIX
   - RULE-SET,cn_domain,直连
   - RULE-SET,geolocation-!cn,🚀 默认代理
-  - RULE-SET,netflix_ip,🎥 NETFLIX
   - RULE-SET,cn_ip,直连
   - MATCH,🐟 漏网之鱼
 
@@ -135,14 +134,14 @@ rule-anchor:
   domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
   class: &class {type: http, interval: 86400, behavior: classical, format: text}
 rule-providers: 
-  fakeipfilter_domain: {<<: *domain, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs"}
   private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
   github_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
   apple_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
   microsoft_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
   ai_domain: {  <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs"}
   netflix_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
+  apple_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"}
+  netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
   cn_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
   geolocation-!cn: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
-  netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
   cn_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
