@@ -2,7 +2,7 @@
 # 自用配置，需要部署DNS服务器，否则DNS模块需要根据注释修改
 # 机场订阅
 proxy-providers:
-  机场名字:
+  机场名称:
     url: "订阅链接"
     type: http
     interval: 86400
@@ -33,8 +33,8 @@ profile:
 # 控制面板
 external-controller: 0.0.0.0:9090
 secret: ""
-external-ui: "/etc/mihomo/run/ui"
-external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+external-ui: ui
+external-ui-url: "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 
 # 嗅探
 sniffer:
@@ -54,7 +54,7 @@ sniffer:
 # 入站  
 tun:
   enable: true
-  stack: mixed
+  stack: mips   ##如果用 mips 遇到问题，改为mixed
   # 如果需要劫持DNS请取消以下注释
   # dns-hijack: ["any:53", "tcp://any:53"]
   auto-route: true
