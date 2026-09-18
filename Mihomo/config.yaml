@@ -54,7 +54,7 @@ sniffer:
 # 入站  
 tun:
   enable: true
-  stack: mips   ##如果用 mips 遇到问题，改为mixed
+  stack: mips   ##如果用 mips 遇到问题，改为 mixed
   # 如果需要劫持DNS请取消以下注释
   # dns-hijack: ["any:53", "tcp://any:53"]
   auto-route: true
