@@ -2,8 +2,8 @@
 # 自用配置，需要部署DNS服务器，否则DNS模块需要根据注释修改
 # 机场订阅
 proxy-providers:
-  COCODUCK:
-    url: "https://sub.cocoduck.cc/sub/cdb087a2672129a8/clash"
+  机场名称:
+    url: "订阅链接"
     type: http
     interval: 86400
     health-check:
