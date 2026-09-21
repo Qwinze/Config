@@ -2,8 +2,8 @@
 # 自用配置，需要部署DNS服务器，否则DNS模块需要根据注释修改
 # 机场订阅
 proxy-providers:
-  机场名称:
-    url: "订阅链接"
+  COCODUCK:
+    url: "https://sub.cocoduck.cc/sub/cdb087a2672129a8/clash"
     type: http
     interval: 86400
     health-check:
@@ -36,6 +36,11 @@ secret: ""
 external-ui: ui
 external-ui-url: "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 
+# 网络自动时间同步
+ntp:
+  enable: true
+  write-to-system: true
+
 # 嗅探
 sniffer:
   enable: true
@@ -66,6 +71,9 @@ tun:
     - cn_ip
 
 # DNS模块
+  # 若无部署DNS服务器，国内用阿里和腾讯的DOH，国外用谷歌的DOH，并添加default-nameserver
+  # default-nameserver的作用类似Bootstrap DNS，用作解析下方的DOH
+  # fallback是为了UDP的精准分流，需要和nameserver区分ECS, 但是适用范围很小，这里不采用
 dns:
   enable: true
   cache-algorithm: arc
@@ -75,6 +83,15 @@ dns:
   fake-ip-ttl: 1
   fake-ip-range: 198.18.0.0/16
   fake-ip-filter-mode: blacklist
+  proxy-server-nameserver:
+    - 10.0.0.4
+  direct-nameserver:
+    - 10.0.0.4
+  nameserver-policy:
+    "rule-set:private_domain,apple_domain,microsoft_domain,cn_domain":
+    - 10.0.0.4
+  nameserver:
+    - 10.0.0.5
   fake-ip-filter:
     - "+.lan"
     - "+.local"
@@ -83,12 +100,7 @@ dns:
     - "rule-set:apple_domain"
     - "rule-set:microsoft_domain"
     - "rule-set:cn_domain"
-  # default-nameserver的作用类似Bootstrap DNS，用作解析下方的DOH
-  # default-nameserver:
-  # 若无部署DNS服务器，以下请用阿里和腾讯的DOH 
-  nameserver:
-    - 10.0.0.4
-    
+      
 # 出站策略
 # 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
 pr: &pr {type: select, proxies: [🚀 默认代理, 🔯 Proxy故转, 🔯 AI故转, ♻️ 香港自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 日本自动, ♻️ ISP自动, ♻️ 美国自动, 🇭🇰 香港节点, 🇹🇼 台湾节点, 🇸🇬 新加坡节点, 🇯🇵 日本节点, 🇭🇰 ISP节点, 🇺🇲 美国节点, 🌐 全部节点, 直连]}
@@ -114,20 +126,20 @@ proxy-groups:
   - {name: 🌐 全部节点, type: select, include-all: true}
 
 # 规则匹配
-# 此规则部分没有做防泄露处理，因为弊严重大于利！
 rules:
   - IP-CIDR,10.0.0.4/32,直连,no-resolve
-  - AND,((RULE-SET,geolocation-!cn),(DST-PORT,443),(NETWORK,UDP)),REJECT
+  - RULE-SET,private_ip,直连,no-resolve
   - RULE-SET,private_domain,直连
+  - AND,((RULE-SET,geolocation-!cn),(DST-PORT,443),(NETWORK,UDP)),REJECT
   - RULE-SET,github_domain,🚀 默认代理
   - RULE-SET,apple_domain,直连
   - RULE-SET,microsoft_domain,直连
   - RULE-SET,ai_domain,🤖 AI
   - RULE-SET,netflix_domain,🎥 NETFLIX
-  - RULE-SET,apple_ip,直连
-  - RULE-SET,netflix_ip,🎥 NETFLIX
   - RULE-SET,cn_domain,直连
   - RULE-SET,geolocation-!cn,🚀 默认代理
+  - RULE-SET,apple_ip,直连
+  - RULE-SET,netflix_ip,🎥 NETFLIX
   - RULE-SET,cn_ip,直连
   - MATCH,🐟 漏网之鱼
 
@@ -138,14 +150,15 @@ rule-anchor:
   domain_text: &domain_text {type: http, interval: 86400, behavior: domain, format: text}
   
 rule-providers: 
+  private_ip: {<<: *ip, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs"}
   private_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs"}
   github_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/github.mrs"}
   apple_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/apple.mrs"}
   microsoft_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs"}
   ai_domain: {  <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs"}
   netflix_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/netflix.mrs"}
-  apple_ip: {<<: *ip, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo-lite/geoip/apple.mrs"}
-  netflix_ip: { <<: *ip, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/netflix.mrs"}
   cn_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs"}
   geolocation-!cn: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-!cn.mrs"}
+  apple_ip: {<<: *ip, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo-lite/geoip/apple.mrs"}
+  netflix_ip: { <<: *ip, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/netflix.mrs"}
   cn_ip: { <<: *ip, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.mrs"}
