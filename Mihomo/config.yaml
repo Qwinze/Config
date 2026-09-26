@@ -84,14 +84,14 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-filter-mode: blacklist
   proxy-server-nameserver:
-    - 10.0.0.4
+    - 10.0.0.3
   direct-nameserver:
-    - 10.0.0.4
+    - 10.0.0.3
   nameserver-policy:
     "rule-set:private_domain,apple_domain,microsoft_domain,cn_domain":
-    - 10.0.0.4
+    - 10.0.0.3
   nameserver:
-    - 10.0.0.5
+    - 10.0.0.4
   fake-ip-filter:
     - "+.lan"
     - "+.local"
@@ -127,7 +127,7 @@ proxy-groups:
 
 # 规则匹配
 rules:
-  - IP-CIDR,10.0.0.4/32,直连,no-resolve
+  - IP-CIDR,10.0.0.3/32,直连,no-resolve
   - RULE-SET,private_ip,直连,no-resolve
   - RULE-SET,private_domain,直连
   - AND,((RULE-SET,geolocation-!cn),(DST-PORT,443),(NETWORK,UDP)),REJECT
