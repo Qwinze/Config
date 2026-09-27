@@ -88,6 +88,8 @@ dns:
   direct-nameserver:
     - 10.0.0.3
   nameserver-policy:
+    "rule-set:github_domain":
+    - 10.0.0.4
     "rule-set:private_domain,apple_domain,microsoft_domain,cn_domain":
     - 10.0.0.3
   nameserver:
