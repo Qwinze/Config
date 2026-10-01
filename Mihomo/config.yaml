@@ -84,24 +84,21 @@ dns:
   fake-ip-range: 198.18.0.0/16
   fake-ip-filter-mode: blacklist
   proxy-server-nameserver:
-    - 10.0.0.3
+    - 10.0.0.3#直连&disable-qtype-65=true
   direct-nameserver:
-    - 10.0.0.3
+    - 10.0.0.3#直连&disable-qtype-65=true
   nameserver-policy:
     "rule-set:github_domain":
-    - 10.0.0.4
+    - 10.0.0.4#直连&disable-qtype-65=true
     "rule-set:private_domain,apple_domain,microsoft_domain,cn_domain":
-    - 10.0.0.3
+    - 10.0.0.3#直连&disable-qtype-65=true
   nameserver:
-    - 10.0.0.4
+    - 10.0.0.4#直连&disable-qtype-65=true
   fake-ip-filter:
     - "+.lan"
     - "+.local"
     - "+.market.xiaomi.com"
-    - "rule-set:private_domain"
-    - "rule-set:apple_domain"
-    - "rule-set:microsoft_domain"
-    - "rule-set:cn_domain"
+    - "rule-set:private_domain,apple_domain,microsoft_domain,cn_domain"
       
 # 出站策略
 # 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
@@ -129,7 +126,6 @@ proxy-groups:
 
 # 规则匹配
 rules:
-  - IP-CIDR,10.0.0.3/32,直连,no-resolve
   - RULE-SET,private_ip,直连,no-resolve
   - RULE-SET,private_domain,直连
   - AND,((RULE-SET,geolocation-!cn),(DST-PORT,443),(NETWORK,UDP)),REJECT
