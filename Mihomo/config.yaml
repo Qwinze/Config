@@ -62,8 +62,7 @@ sniffer:
 tun:
   enable: true
   stack: mips  ## 如果出现问题，改为 mixed
-  # 如果需要劫持DNS请取消以下注释
-  # dns-hijack: ["any:53", "tcp://any:53"]
+  dns-hijack: ["any:53", "tcp://any:53"]
   auto-route: true
   auto-redirect: true
   auto-detect-interface: true
@@ -77,7 +76,6 @@ tun:
 dns:
   enable: true
   cache-algorithm: arc
-  listen: 0.0.0.0:53
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-ttl: 1
