@@ -41,6 +41,17 @@ ntp:
   enable: true
   write-to-system: true
 
+# 入站  
+tun:
+  enable: true
+  stack: mips  ## 如果出现问题，改为 mixed
+  dns-hijack: ["any:53", "tcp://any:53"]
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+  route-exclude-address-set:
+    - cn_ip
+
 # 嗅探
 sniffer:
   enable: true
@@ -57,17 +68,6 @@ sniffer:
   skip-domain:
     - "Mijia Cloud"
     - "+.push.apple.com"
-
-# 入站  
-tun:
-  enable: true
-  stack: mips  ## 如果出现问题，改为 mixed
-  dns-hijack: ["any:53", "tcp://any:53"]
-  auto-route: true
-  auto-redirect: true
-  auto-detect-interface: true
-  route-exclude-address-set:
-    - cn_ip
 
 # DNS模块
   # 若无部署DNS服务器，国内用阿里和腾讯的DOH，国外用谷歌的DOH，并添加default-nameserver
