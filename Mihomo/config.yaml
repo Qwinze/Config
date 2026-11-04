@@ -20,7 +20,7 @@ proxies:
 mixed-port: 7890
 allow-lan: true
 bind-address: "*"
-ipv6: true
+ipv6: false
 unified-delay: true
 tcp-concurrent: true
 log-level: info
